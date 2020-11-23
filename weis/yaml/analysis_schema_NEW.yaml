@@ -434,82 +434,193 @@ properties:
                                 properties:
                                     linked: *joint_link
                                     independent: *joint_indep
+            actuators:
+                type: object
+                default: {}
+                properties:
+                    generator:
+                        type: object
+                        default: {}
+                        properties:
+                            rated_power:
+                                type: object
+                                description: Generator rated power
+                                default: {}
+                                properties:
+                                    flag: *flag
+                                    lower_bound:
+                                        type: number
+                                        default: 0.0
+                                        unit: MW
+                                    upper_bound:
+                                        type: number
+                                        default: 100.0
+                                        unit: MW
+                            rated_gen_speed:
+                                type: object
+                                description: Rated generator speed
+                                default: {}
+                                properties:
+                                    flag: *flag
+                                    lower_bound: 
+                                        type: number
+                                        default: 0.0
+                                        unit: rad/s
+                                    upper_bound:
+                                        type: number
+                                        default: 100000000.0
+                                        unit: rad/s
+                            rated_gen_torque:
+                                type: object
+                                description: Rated generator torque
+                                default: {}
+                                properties:
+                                    flag: *flag
+                                    lower_bound: 
+                                        type: number
+                                        default: 0.0
+                                        unit: kNm
+                                    upper_bound:
+                                        type: number
+                                        default: 1000000000000.0
+                                        unit: kNm
             control:
                 type: object
                 default: {}
                 properties:
-                    tsr:
+                    pitch:
+                        type: object
+                        default: {}
+                        properties:
+                            PC_omega: 
+                                type: object
+                                description: Pitch controller desired natural frequency. It is used by the ROSCO controller (https://github.com/NREL/ROSCO)
+                                default: {}
+                                properties:
+                                    flag: *flag
+                                    lower_bound: &omega_min
+                                        type: number
+                                        default: 0.0
+                                        unit: rad/s
+                                    upper_bound: &omega_max
+                                        type: number
+                                        default: 100.0
+                                        unit: rad/s
+                            PC_zeta:
+                                type: object
+                                description: Pitch controller desired damping ratio. It is used by the ROSCO controller (https://github.com/NREL/ROSCO)
+                                default: {}
+                                properties:
+                                    flag: *flag
+                                    lower_bound: &zeta_min
+                                        type: number
+                                        default: 0.0
+                                        unit: none
+                                    upper_bound: &zeta_max
+                                        type: number
+                                        default: 100.0
+                                        unit: none
+                            ps_percent:
+                                type: object
+                                default: {}
+                                description: Percent peak shaving as a design variable
+                                properties:
+                                    flag: *flag
+                                    lower_bound:
+                                        type: number
+                                        default: 0.0
+                                        unit: none
+                                    upper_bound:
+                                        type: number
+                                        default: 1.0
+                                        unit: none
+                            fl_feedback:
+                                type: object
+                                description: Platform velocity feedback using nacelle IMU
+                                default: {}
+                                properties:
+                                    gain:
+                                        type: object
+                                        default: {}
+                                        description: Gain of floating feedback using nacelle IMU
+                                        properties:
+                                            flag: *flag
+                                            lower_bound:
+                                                type: number
+                                                default: 0.0
+                                                unit: seconds
+                                            upper_bound:
+                                                type: number
+                                                default: 10000
+                                                unit: seconds
+                                    filter:
+                                        type: object
+                                        default: {}
+                                        description: Filter from in platform pitch feedback
+                                        properties:
+                                            flag: *flag
+                            IPC:
+                                type: object
+                                description: Individual pitch control (IPC) using the mulitblade coordinate (MBC) transform
+                                default: {}
+                                properties:
+                                    IPC_gain_1P:
+                                        type: object
+                                        default: {}
+                                        description: Integral gain of 1P feedback
+                                        properties:
+                                            flag: *flag
+                                            lower_bound:
+                                                type: number
+                                                default: 0.0
+                                                unit: rad/Nm
+                                            upper_bound:
+                                                type: number
+                                                default: 10000
+                                                unit: rad/Nm
+                                    IPC_phase_1P:
+                                        type: object
+                                        default: {}
+                                        description: Phase lag of 1P IPC feedback
+                                        properties:
+                                            flag: *flag
+                                            lower_bound:
+                                                type: number
+                                                default: -3.14
+                                                unit: rad
+                                            upper_bound:
+                                                type: number
+                                                default: 3.14
+                                                unit: rad
+                    torque:
+                        type: object
+                        default: {}
+                        properties:
+                            VS_zeta:
+                                type: object
+                                default: {}
+                                description: Damping ratio of torque control regulator mode
+                                properties:
+                                    flag: *flag
+                                    lower_bound: *zeta_min
+                                    upper_bound: *zeta_max
+                            VS_omega:
+                                type: object
+                                default: {}
+                                description: Natural frequency of torque control regulator mode
+                                properties:
+                                    flag: *flag
+                                    lower_bound: *omega_min
+                                    upper_bound: *omega_max
+                    flap_control:
                         type: object
                         default: {}
                         properties:
                             flag: *flag
-                            min_gain: *mingain
-                            max_gain: *maxgain
-                    ps_percent:
-                        type: object
-                        default: {}
-                        description: Percent peak shaving as a design variable
-                        properties:
-                            flag: *flag
-                            lower_bound:
-                                type: number
-                                default: 0.0
-                                unit: none
-                            upper_bound:
-                                type: number
-                                default: 50.0
-                                unit: none
-                    servo:
-                        type: object
-                        default: {}
-                        properties:
-                            pitch_control:
-                                type: object
-                                default: {}
-                                properties:
-                                    flag: *flag
-                                    omega_min: &omega_min
-                                        type: number
-                                        default: 0.1
-                                        minimum: 0.0
-                                        maximum: 10.0
-                                        unit: none
-                                    omega_max: &omega_max
-                                        type: number
-                                        default: 0.7
-                                        minimum: 0.0
-                                        maximum: 10.0
-                                        unit: none
-                                    zeta_min: &zeta_min
-                                        type: number
-                                        default: 0.4
-                                        minimum: 0.0
-                                        maximum: 10.0
-                                        unit: none
-                                    zeta_max: &zeta_max
-                                        type: number
-                                        default: 1.5
-                                        minimum: 0.0
-                                        maximum: 10.0
-                                        unit: none
-                            torque_control:
-                                type: object
-                                default: {}
-                                properties:
-                                    flag: *flag
-                                    omega_min: *omega_min
-                                    omega_max: *omega_max
-                                    zeta_min: *zeta_min
-                                    zeta_max: *zeta_max
-                            flap_control:
-                                type: object
-                                default: {}
-                                properties:
-                                    flag: *flag
-                                    omega_min: *omega_min
-                                    omega_max: *omega_max
-                                    zeta_min: *zeta_min
-                                    zeta_max: *zeta_max
+                            omega_min: *omega_min
+                            omega_max: *omega_max
+                            zeta_min: *zeta_min
+                            zeta_max: *zeta_max
 
     constraints:
         # GB: These all need gammas or safety factors
@@ -652,7 +763,7 @@ properties:
                 properties:
                     flap_control:
                         type: object
-                        description: Words TODO
+                        description: Words TODO  # DZ: I'm not sure what this represents
                         default: {}
                         properties:
                             flag: *flag
@@ -662,6 +773,32 @@ properties:
                                 minimum: 0.0
                                 maximum: 1.0
                             max: *flapminmax
+                    max_tip_speed:
+                        type: object
+                        description: Maximum allowable tip speed
+                        default: {}
+                        properties:
+                            flag: *flag
+                            min: &tip_minmax
+                                type: number
+                                untis: m/s
+                                default: 100
+                                minimum: 0.0
+                                maximum: 200
+                            max: *tip_minmax
+                    max_gen_speed:
+                        type: object
+                        description: Maximum allowable generator speed
+                        default: {}
+                        properties:
+                            flag: *flag
+                            min: &gen_minmax
+                                type: number
+                                units: rad/s
+                                default: 1.0
+                                minimum: 0.0
+                                maximum: 100000.0
+                            max: *gen_minmax
 
     merit_figure:
         type: string
