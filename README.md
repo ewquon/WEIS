@@ -47,7 +47,7 @@ The installation instructions below use the environment name, "weis-env," but an
     
 2.  Use conda to install the build dependencies.  Note the differences between Windows and Mac/Linux build systems
 
-        conda install -y cmake cython geopy git jsonschema make matplotlib-base numpy numpydoc openmdao openpyxl pandas pip pytest pyyaml ruamel_yaml scipy setuptools shapely six sympy swig xlrd
+        conda install -y cmake cython geopy git jsonschema make matplotlib-base numpy numpydoc openmdao openpyxl pandas pip pytest pyyaml ruamel_yaml scipy setuptools shapely six sortedcontainers sympy swig xlrd
         conda install -y petsc4py mpi4py compilers       # (Mac / Linux only)   
         conda install -y m2w64-toolchain libpython       # (Windows only)
         pip install simpy marmot-agents
